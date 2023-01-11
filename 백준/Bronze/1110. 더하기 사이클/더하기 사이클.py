@@ -1,24 +1,19 @@
-N = int(input())
+N = str(input()).zfill(2)
 result = 0
 T = N
-r_list = []
+count = 0
 
 
 while True:
-    if T >= 10:
-        result = (T//10) + (T%10)
-        result = int(str(T%10) + str(result%10))
-    
-    else:
-        result = 0 + T
-        result = int(str(T%10) + str(result%10))
+    count += 1
 
-    if result != N:
-        r_list.append(result)
+    result = T[1] + str(int(T[0]) + int(T[1])).zfill(2)[1]
+    result = str(result).zfill(2)
+    
+    
+    if int(result) == int(N):
+        break
+    else:
         T = result
 
-    else:
-        r_list.append(result)
-        break
-
-print(len(r_list))
+print(count)
