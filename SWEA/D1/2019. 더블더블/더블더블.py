@@ -1,8 +1,8 @@
 T = int(input())
-result = 1
-r_list = []
-for t in range(1, T+2):
-    r_list.append(result)
-    result *= 2
-
+result = 0
+r_list = [1]
+for t in range(1, T+1):
+    result += 1
+    r_list.append(2**result)
+    
 print(*r_list)
