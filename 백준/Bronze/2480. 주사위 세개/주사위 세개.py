@@ -1,10 +1,5 @@
-numbers = map(int, input().split())
-result = []
+result = list(map(int, input().split()))
 
-for n in numbers:
-    result.append(n)
-
-prize = 0
 prize_list = []
 
 for i in result:
