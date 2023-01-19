@@ -1,2 +1,2 @@
 S = input()
-print(sum(map(int, S.replace(',', ' ').split())))
+print(sum(map(int, S.split(','))))
