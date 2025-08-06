@@ -31,23 +31,23 @@ public class Solution {
 			int minDay = Integer.MAX_VALUE;
 
 			for (int i = 0; i < 7; i++) {
-				int lesson = 0;
-				int day = 0;
-				// lesson가 N값에 도달할 때까지 week 반복 순회
-				// week의 해당 day value 값이 1일때마다 lesson++
-				while (lesson < N) {
-					if (week[(i + day) % 7] == 1) {
-						lesson++;
-					}
-					day++;
-				}
-				// 최소 일수 확인
-				if (minDay > day) {
-					minDay = day;
-				}
-
+                if (week[i] == 1) {
+                    int lesson = 0;
+                    int day = 0;
+                    // lesson가 N값에 도달할 때까지 week 반복 순회
+                    // week의 해당 day value 값이 1일때마다 lesson++
+                    while (lesson < N) {
+                        if (week[(i + day) % 7] == 1) {
+                            lesson++;
+                        }
+                        day++;
+                    }
+                    // 최소 일수 확인
+                    if (minDay > day) {
+                        minDay = day;
+                    }
+                }
 			}
-
 			System.out.println("#" + tc + " " + minDay);
 		}
 	}
