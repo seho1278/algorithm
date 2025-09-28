@@ -3,26 +3,56 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
+/**
+ * Union-Find 풀이
+ * 
+ * 서로소 집합을 이용
+ * 각 비교하는 정점의 find 결과에 대한 root값이 동일한 경우
+ * 같은 집합 즉 사이클이 발생하므로 그 즉시 탐색 종료하고 Yes 반환
+ */
+
 public class Main {
+	
+	// 자료구조 정적으로 관리
 	static int N, M;
 	static char[][] matrix;
-	static boolean[][] visited;
-	static boolean isValid;
+	static int[] parent;
+
+	// union-find 구현
+	public static int find(int x) {
+		if (parent[x] != x) {
+			// 경로 압축 진행
+			parent[x] = find(parent[x]);
+		}
+		
+		return parent[x];
+	}
 	
-	static int[] dr = {-1, 1, 0, 0};
-	static int[] dc = {0, 0, -1, 1};
+	public static void union(int a, int b) {
+		int rootA = find(a);
+		int rootB = find(b);
+		if (rootA != rootB) {
+			if (rootA < rootB) {
+				parent[rootB] = rootA;
+			} else {
+				parent[rootA] = rootB; 
+			}
+		}
+	}
 	
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		
 		StringTokenizer st = new StringTokenizer(br.readLine());
 		
 		N = Integer.parseInt(st.nextToken());
 		M = Integer.parseInt(st.nextToken());
 		
 		matrix = new char[N][M];
-		visited = new boolean[N][M];
-		isValid = false;
+		parent = new int[N * M];
+		
+		for (int i = 0; i < N * M; i++) {
+			parent[i] = i;
+		}
 		
 		for (int i = 0; i < N; i++) {
 			String str = br.readLine();
@@ -31,43 +61,38 @@ public class Main {
 			}
 		}
 		
+		boolean isValid = false;
+		
 		for (int i = 0; i < N; i++) {
 			for (int j = 0; j < M; j++) {
-				if (!visited[i][j]) {
-					dfs(i, j, 0, 0);
-					if (isValid) {
-						System.out.println("Yes");
-						return;
+				int u = i * M + j; // 시작 정점
+				
+				// right
+				if (j + 1 < M && matrix[i][j] == matrix[i][j + 1]) {
+					int v = i * M + (j + 1); // 방문 정점
+					if (find(u) == find(v)) { // 같으면 사이클
+						isValid = true;
+						break;
 					}
+					union(u, v);
 				}
+				
+				// down
+				if (i + 1 < N && matrix[i][j] == matrix[i + 1][j]) {
+					int v = (i + 1) * M + j; // 방문 정점
+					if (find(u) == find(v)) { // 같으면 사이클
+						isValid = true;
+						break;
+					}
+					union(u, v);
+				}
+			}
+			if (isValid) {
+				break;
 			}
 		}
 		
-		System.out.println("No");
+		System.out.println(isValid ? "Yes" : "No");
 	}
 	
-	public static void dfs(int row, int col, int prevR, int prevC) {
-		visited[row][col] = true;
-		for (int dir = 0; dir < 4; dir++) {
-			int nr = row + dr[dir];
-			int nc = col + dc[dir];
-			
-			if (nr == prevR && nc == prevC) {
-				continue;
-			}
-			
-			if (check(nr, nc) && matrix[nr][nc] == matrix[row][col]) {
-				if (!visited[nr][nc]) {
-					dfs(nr, nc, row, col);
-				} else {
-					isValid = true;
-					return;
-				}
-			}
-		}
-	}
-	
-	public static boolean check(int nr, int nc) {
-		return nr >= 0 && nr < N && nc >= 0 && nc < M;
-	}
 }
