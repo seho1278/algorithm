@@ -7,6 +7,7 @@ import java.util.StringTokenizer;
 
 /**
  * 알파벳
+ * boolean 배열 사용
  */
 public class Main {
 	static int R, C;
@@ -15,7 +16,7 @@ public class Main {
 	
 	static int[] dr = {-1, 1, 0, 0};
 	static int[] dc = {0, 0, -1, 1};
-	static Set<Character> move;
+	static boolean[] visited;
 	
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -28,17 +29,17 @@ public class Main {
 			matrix[i] = br.readLine().toCharArray();
 		}
 		
-		move = new HashSet<>();
+		visited = new boolean[26];
 		result = 0;
 		
-		move.add(matrix[0][0]);
-		dfs(0, 0);
+		visited[matrix[0][0] - 'A'] = true;
+		dfs(0, 0, 1);
 		
 		System.out.println(result);
 	}
 	
-	public static void dfs(int r, int c) {
-		result = Math.max(result, move.size());
+	public static void dfs(int r, int c, int cnt) {
+		result = Math.max(result, cnt);
 		
 		for (int dir = 0; dir < 4; dir++) {
 			int nr = r + dr[dir];
@@ -48,10 +49,12 @@ public class Main {
 				continue;
 			}
 			
-			if (!move.contains(matrix[nr][nc])) {
-				move.add(matrix[nr][nc]);
-				dfs(nr, nc);
-				move.remove(matrix[nr][nc]);
+			int curIdx = matrix[nr][nc] - 'A';
+			
+			if (!visited[curIdx]) {
+				visited[curIdx] = true;
+				dfs(nr, nc, cnt + 1);
+				visited[curIdx] = false;
 			}
 		}
 	}
